@@ -12,7 +12,7 @@ on:
 jobs:
   build:
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         platform: [ windows-latest, macos-latest, ubuntu-latest ]
         style: [ default ]
