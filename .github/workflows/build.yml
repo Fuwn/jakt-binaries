@@ -1,0 +1,40 @@
+name: 🏗 Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: true
+      matrix:
+        platform: [ windows-latest, macos-latest, ubuntu-latest ]
+        style: [ default ]
+        rust:
+          - stable
+    
+    runs-on: ${{ matrix.platform }}
+    
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: 🛒 Checkout Jakt
+        uses: actions/checkout@v2
+        with:
+          repository: SerenityOS/jakt
+          ref: main
+      
+      - name: 🛠 Build Jakt
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release
+      
+      - name: 🚀 Upload Artifacts
+        uses: actions/upload-artifacts@v2.2.4
+        with:
+          name: jakt-${{ matrix.platform }}
