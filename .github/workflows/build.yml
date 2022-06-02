@@ -6,6 +6,8 @@ on:
   pull_request:
     branches: [ master ]
   workflow_dispatch:
+  release:
+    types: [ published ]
 
 jobs:
   build:
@@ -35,15 +37,43 @@ jobs:
           args: --release
       
       - name: 🚀 Upload Artifacts
-        if: matrix.platform == 'windows-latest'
+        if: matrix.platform == "windows-latest"
         uses: actions/upload-artifact@v2.2.4
         with:
           name: jakt-${{ matrix.platform }}
           path: target/release/jakt.exe
       
-      - name: 🚀 Upload Artifacts
-        if: matrix.platform != 'windows-latest'
+      - name: 🚀 Upload Artifacts to Action
+        if: matrix.platform != "windows-latest"
         uses: actions/upload-artifact@v2.2.4
         with:
           name: jakt-${{ matrix.platform }}
           path: target/release/jakt
+      
+      - name: 📦 Get Release
+        id: get_release
+        uses: bruceadams/get-release@v1.2.3
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      
+      - name: 💎 Upload Artifacts to Release
+        if: matrix.platform == "windows-latest"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: target/release/jakt.exe
+          asset_name: jakt.exe
+          asset_content_type: application/octet-stream
+      
+      - name: 💎 Upload Artifacts to Release
+        if: matrix.platform != "windows-latest"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: target/release/jakt
+          asset_name: jakt
+          asset_content_type: application/octet-stream
