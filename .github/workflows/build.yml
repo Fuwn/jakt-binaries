@@ -38,7 +38,7 @@ jobs:
         if: matrix.platform == 'windows-latest'
         uses: actions/upload-artifact@v2.2.4
         with:
-          name: jakt-${{ matrix.platform }}.exe
+          name: jakt-${{ matrix.platform }}
           path: target/release/jakt.exe
       
       - name: 🚀 Upload Artifacts
