@@ -3,11 +3,11 @@ name: 🏗 Build
 on:
   push:
     branches: [ master ]
+    tags:
+      - "*"
   pull_request:
     branches: [ master ]
   workflow_dispatch:
-  release:
-    types: [ published ]
 
 jobs:
   build:
@@ -50,11 +50,16 @@ jobs:
           name: jakt-${{ matrix.platform }}
           path: target/release/jakt
       
-      - name: 📦 Get Release
-        id: get_release
-        uses: bruceadams/get-release@v1.2.3
+      - name: 📦 Create Release
+        id: create_release
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: false
+          prerelease: false
       
       - name: 💎 Upload Artifacts to Release
         if: matrix.platform == "windows-latest"
@@ -62,7 +67,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: target/release/jakt.exe
           asset_name: jakt.exe
           asset_content_type: application/octet-stream
@@ -73,7 +78,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: target/release/jakt
           asset_name: jakt
           asset_content_type: application/octet-stream
