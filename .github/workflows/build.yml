@@ -69,7 +69,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: target/release/jakt.exe
-          asset_name: jakt.exe
+          asset_name: jakt-${{ matrix.platform }}
           asset_content_type: application/octet-stream
       
       - name: 💎 Upload Artifacts to Release
@@ -80,5 +80,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: target/release/jakt
-          asset_name: jakt
+          asset_name: jakt-${{ matrix.platform }}
           asset_content_type: application/octet-stream
