@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
     tags:
-      - "*"
+      - '*'
   pull_request:
     branches: [ main ]
   workflow_dispatch:
@@ -37,14 +37,14 @@ jobs:
           args: --release
       
       - name: 🚀 Upload Artifacts
-        if: matrix.platform == "windows-latest"
+        if: matrix.platform == 'windows-latest'
         uses: actions/upload-artifact@v2.2.4
         with:
           name: jakt-${{ matrix.platform }}
           path: target/release/jakt.exe
       
       - name: 🚀 Upload Artifacts to Action
-        if: matrix.platform != "windows-latest"
+        if: matrix.platform != 'windows-latest'
         uses: actions/upload-artifact@v2.2.4
         with:
           name: jakt-${{ matrix.platform }}
@@ -62,7 +62,7 @@ jobs:
           prerelease: false
       
       - name: 💎 Upload Artifacts to Release
-        if: matrix.platform == "windows-latest"
+        if: matrix.platform == 'windows-latest'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -73,7 +73,7 @@ jobs:
           asset_content_type: application/octet-stream
       
       - name: 💎 Upload Artifacts to Release
-        if: matrix.platform != "windows-latest"
+        if: matrix.platform != 'windows-latest'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
